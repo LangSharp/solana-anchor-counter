@@ -37,6 +37,19 @@ describe("counter", () => {
         console.log("Valor del contador despues de la actualizacion", account.count.toString());
     } );
 
+  it("Decremento del contador", async () =>  {
+      await program.methods
+      .decrement()
+      .accounts({
+          myCounter: myCounter.publicKey,
+          owner: provider.wallet.publicKey,
+      })
+      .rpc();
+
+      const account = await program.account.counter.fetch(myCounter.publicKey);
+      console.log("El valor del contador despues de decrementarlo es: ", account.count.toString());
+  });
+
   it("Falla si un extraño intenta incrementar", async () => {
     try {
       await program.methods

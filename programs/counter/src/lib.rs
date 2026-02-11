@@ -22,6 +22,13 @@ pub mod counter {
         Ok(())
     }
 
+    pub fn decrement(ctx: Context<Decrement>) -> Result<()> {
+        let counter = &mut ctx.accounts.my_counter;
+        counter.count -= 1;
+        msg!("The value in counter is: {} (decrement)", counter.count);
+        Ok(())
+    }
+
     pub fn close(_ctx: Context<Close>) -> Result<()> {
         msg!("Cuenta Cerrada, SOL recuperado");
         Ok(())
@@ -30,7 +37,7 @@ pub mod counter {
 
 #[derive(Accounts)]
 pub struct Initialize<'info> {
-    #[account(init, payer = user, space = 8 + 48 )]
+    #[account(init, payer = user, space = Counter::INIT_SPACE + 8)]
     pub my_counter: Account<'info, Counter>,
 
     #[account(mut)]
@@ -40,6 +47,13 @@ pub struct Initialize<'info> {
 
 #[derive(Accounts)]
 pub struct Increment<'info > {
+    #[account(mut, has_one = owner @ ErrorCode::Unauthorized)]
+    pub my_counter: Account<'info, Counter>,
+    pub owner: Signer<'info>,
+}
+
+#[derive(Accounts)]
+pub struct Decrement<'info> {
     #[account(mut, has_one = owner @ ErrorCode::Unauthorized)]
     pub my_counter: Account<'info, Counter>,
     pub owner: Signer<'info>,
@@ -61,6 +75,7 @@ pub enum ErrorCode {
 }
 
 #[account]
+#[derive(InitSpace)]
 pub struct Counter {
     pub count: u64,
     pub owner: Pubkey,

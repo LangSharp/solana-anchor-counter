@@ -7,6 +7,8 @@ skip-lint = false
 
 [programs.localnet]
 counter = "CyW9Ck7HrNQryT1mGobveET4BT1At7SGu4mpQWWqabAb"
+favorites = "Hfa66TSGWs6qZhKViRvq4wLqkFihFXBLcpK6C47SE9En"
+tokens = "BCzhuQmCQVPt1WdFyqgssCDaeZBURET85K2ZsDDdnijs"
 
 [registry]
 url = "https://api.apr.dev"
